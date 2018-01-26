@@ -2,7 +2,7 @@
 
 [![](https://images.microbadger.com/badges/image/fuxin/crypto-market-overwatch.svg)](https://microbadger.com/images/fuxin/crypto-market-overwatch "Get your own image badge on microbadger.com")
 
-crypto-market-overwatch is a exportor for prometheus to track crypto coins.
+crypto-market-overwatch is a exportor for prometheus to track crypto coins. Grafana demo: http://45.32.68.4/, both of username and password are `guest`.
 
 ## Installation
 
@@ -29,6 +29,8 @@ docker run -it -d -p 80:80 --name crypto-market-overwatch fuxin/crypto-market-ov
 Then start your prometheus and configure the target to the server, see [prometheus.yml](https://github.com/FX-HAO/crypto-market-overwatch/blob/master/prometheus/prometheus.yml).
 
 ## Options
+
+You can set up a Grafana dashboard for Prometheus. More info: [Grafana supports querying Prometheus](https://prometheus.io/docs/visualization/grafana/)
 
 ## Roadmap
 
