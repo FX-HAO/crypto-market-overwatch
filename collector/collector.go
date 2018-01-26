@@ -29,77 +29,77 @@ var (
 	)
 	pastDayVolumeUSD = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "past_day_volume_usd",
+			Name: "coin_past_day_volume_usd",
 			Help: "Volume of the coin in past 24 hours",
 		},
 		[]string{"currency"},
 	)
 	marketCapUSD = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "market_cap_usd",
+			Name: "coin_market_cap_usd",
 			Help: "Market capitalization of the coin",
 		},
 		[]string{"currency"},
 	)
 	availableSupply = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "available_supply",
+			Name: "coin_available_supply",
 			Help: "Available supply",
 		},
 		[]string{"currency"},
 	)
 	totalSupply = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "total_supply",
+			Name: "coin_total_supply",
 			Help: "Total supply",
 		},
 		[]string{"currency"},
 	)
 	maxSupply = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "max_supply",
+			Name: "coin_max_supply",
 			Help: "Maximum supply",
 		},
 		[]string{"currency"},
 	)
 	percentChangeOneHour = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "percent_change_1h",
+			Name: "coin_percent_change_1h",
 			Help: "Percent change in 1 hour",
 		},
 		[]string{"currency"},
 	)
 	percentChangePastDay = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "percent_change_24h",
+			Name: "coin_percent_change_24h",
 			Help: "Percent change in 24 hours",
 		},
 		[]string{"currency"},
 	)
 	percentChangePastSevenDays = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "percent_change_7d",
+			Name: "coin_percent_change_7d",
 			Help: "Percent change in 7 days",
 		},
 		[]string{"currency"},
 	)
 	priceCNY = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "price_cny",
+			Name: "coin_price_cny",
 			Help: "Current CNY price of the coin",
 		},
 		[]string{"currency"},
 	)
 	pastDayVolumeCNY = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "past_day_volume_cny",
+			Name: "coin_past_day_volume_cny",
 			Help: "CNY volume of the coin in past 24 hours",
 		},
 		[]string{"currency"},
 	)
 	marketCapCNY = prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "market_cap_cny",
+			Name: "coin_market_cap_cny",
 			Help: "CNY market capitalization of the coin",
 		},
 		[]string{"currency"},
