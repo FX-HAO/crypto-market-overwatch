@@ -21,6 +21,9 @@ type Coin struct {
 	PercentChangePastDay       float64 `json:"percent_change_24h,string"`
 	PercentChangePastSevenDays float64 `json:"percent_change_7d,string"`
 	LastUpdated                int64   `json:"-"`
+	PriceCNY                   float64 `json:"price_cny,string"`
+	PastDayVolumeCNY           float64 `json:"24h_volume_cny,string"`
+	MarketCapCNY               float64 `json:"market_cap_cny,string"`
 }
 
 func (coin *Coin) Metrics() map[string]float64 {
@@ -39,7 +42,7 @@ func (coin *Coin) Metrics() map[string]float64 {
 }
 
 func (coin *Coin) concatenateMetricName(attr string) string {
-	return strings.Join([]string{"", strings.Replace(strings.ToLower(coin.ID), "-", "_", -1), attr}, "_")
+	return strings.Join([]string{strings.Replace(strings.ToLower(coin.ID), "-", "_", -1), attr}, "_")
 }
 
 type Coins []*Coin

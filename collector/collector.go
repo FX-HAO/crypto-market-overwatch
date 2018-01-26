@@ -12,6 +12,116 @@ import (
 	resty "gopkg.in/resty.v0"
 )
 
+var (
+	priceUSD = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "coin_price_usd",
+			Help: "Current price of the coin",
+		},
+		[]string{"currency"},
+	)
+	priceBTC = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "coin_price_btc",
+			Help: "Current btc price of the coin",
+		},
+		[]string{"currency"},
+	)
+	pastDayVolumeUSD = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "past_day_volume_usd",
+			Help: "Volume of the coin in past 24 hours",
+		},
+		[]string{"currency"},
+	)
+	marketCapUSD = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "market_cap_usd",
+			Help: "Market capitalization of the coin",
+		},
+		[]string{"currency"},
+	)
+	availableSupply = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "available_supply",
+			Help: "Available supply",
+		},
+		[]string{"currency"},
+	)
+	totalSupply = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "total_supply",
+			Help: "Total supply",
+		},
+		[]string{"currency"},
+	)
+	maxSupply = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "max_supply",
+			Help: "Maximum supply",
+		},
+		[]string{"currency"},
+	)
+	percentChangeOneHour = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "percent_change_1h",
+			Help: "Percent change in 1 hour",
+		},
+		[]string{"currency"},
+	)
+	percentChangePastDay = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "percent_change_24h",
+			Help: "Percent change in 24 hours",
+		},
+		[]string{"currency"},
+	)
+	percentChangePastSevenDays = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "percent_change_7d",
+			Help: "Percent change in 7 days",
+		},
+		[]string{"currency"},
+	)
+	priceCNY = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "price_cny",
+			Help: "Current CNY price of the coin",
+		},
+		[]string{"currency"},
+	)
+	pastDayVolumeCNY = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "past_day_volume_cny",
+			Help: "CNY volume of the coin in past 24 hours",
+		},
+		[]string{"currency"},
+	)
+	marketCapCNY = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "market_cap_cny",
+			Help: "CNY market capitalization of the coin",
+		},
+		[]string{"currency"},
+	)
+)
+
+func init() {
+	prometheus.MustRegister(priceUSD)
+	prometheus.MustRegister(priceBTC)
+	prometheus.MustRegister(pastDayVolumeUSD)
+	prometheus.MustRegister(marketCapUSD)
+	prometheus.MustRegister(availableSupply)
+	prometheus.MustRegister(totalSupply)
+	prometheus.MustRegister(maxSupply)
+	prometheus.MustRegister(percentChangeOneHour)
+	prometheus.MustRegister(percentChangePastDay)
+	prometheus.MustRegister(percentChangePastSevenDays)
+	prometheus.MustRegister(priceCNY)
+	prometheus.MustRegister(pastDayVolumeCNY)
+	prometheus.MustRegister(marketCapCNY)
+}
+
 type Collector struct {
 	mu sync.RWMutex
 
@@ -39,7 +149,7 @@ func (c *Collector) Start() {
 }
 
 func (c *Collector) fetch() (coin.Coins, error) {
-	resp, err := resty.R().Get("https://api.coinmarketcap.com/v1/ticker/")
+	resp, err := resty.R().Get("https://api.coinmarketcap.com/v1/ticker/?convert=CNY")
 	if err != nil {
 		log.Error(err)
 		return nil, err
@@ -67,31 +177,32 @@ func (c *Collector) collect() {
 				continue
 			}
 			for _, coin := range coins {
-				id := coin.ID
-				metrics := coin.Metrics()
-				if _, ok := c.coins[id]; !ok {
-					for k, _ := range metrics {
-						gauge := prometheus.NewGaugeVec(
-							prometheus.GaugeOpts{
-								Name: k,
-								Help: k,
-							},
-							[]string{},
-						).WithLabelValues()
-						prometheus.MustRegister(gauge)
-						c.gauges[k] = gauge
-						log.Infof("Register %s", k)
-					}
-				}
+				(&gaugeCoin{priceUSD}).setCoin(coin, coin.PriceUSD)
+				(&gaugeCoin{priceBTC}).setCoin(coin, coin.PriceBTC)
+				(&gaugeCoin{pastDayVolumeUSD}).setCoin(coin, coin.PastDayVolumeUSD)
+				(&gaugeCoin{marketCapUSD}).setCoin(coin, coin.MarketCapUSD)
+				(&gaugeCoin{availableSupply}).setCoin(coin, coin.AvailableSupply)
+				(&gaugeCoin{totalSupply}).setCoin(coin, coin.TotalSupply)
+				(&gaugeCoin{maxSupply}).setCoin(coin, coin.MaxSupply)
+				(&gaugeCoin{percentChangeOneHour}).setCoin(coin, coin.PercentChangeOneHour)
+				(&gaugeCoin{percentChangePastDay}).setCoin(coin, coin.PercentChangePastDay)
+				(&gaugeCoin{percentChangePastSevenDays}).setCoin(coin, coin.PercentChangePastSevenDays)
+				(&gaugeCoin{priceCNY}).setCoin(coin, coin.PriceCNY)
+				(&gaugeCoin{pastDayVolumeCNY}).setCoin(coin, coin.PastDayVolumeCNY)
+				(&gaugeCoin{marketCapCNY}).setCoin(coin, coin.MarketCapCNY)
 
-				for k, v := range metrics {
-					gauge := c.gauges[k]
-					gauge.Set(v)
-				}
-				c.coins[id] = coin
+				c.coins[coin.ID] = coin
 			}
 			c.lastUpdated = time.Now().Unix()
 			c.mu.Unlock()
 		}
 	}()
+}
+
+type gaugeCoin struct {
+	*prometheus.GaugeVec
+}
+
+func (gauge *gaugeCoin) setCoin(coin *coin.Coin, v float64) {
+	gauge.WithLabelValues(coin.ID).Set(v)
 }
