@@ -108,6 +108,8 @@ var (
 )
 
 func init() {
+	resty.SetHTTPMode()
+
 	prometheus.MustRegister(priceUSD)
 	prometheus.MustRegister(priceBTC)
 	prometheus.MustRegister(pastDayVolumeUSD)
