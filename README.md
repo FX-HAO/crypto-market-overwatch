@@ -2,7 +2,7 @@
 
 [![](https://images.microbadger.com/badges/image/fuxin/crypto-market-overwatch.svg)](https://microbadger.com/images/fuxin/crypto-market-overwatch "Get your own image badge on microbadger.com")
 
-crypto-market-overwatch is a exportor for prometheus to track crypto coins. Grafana demo: http://45.32.68.4/, both of username and password are `guest`.
+crypto-market-overwatch is an exporter for prometheus to track crypto coins. Grafana demo: http://45.32.68.4/, both of username and password are `guest`.
 
 ## Installation
 
