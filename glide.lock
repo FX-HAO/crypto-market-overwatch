@@ -1,12 +1,12 @@
-hash: 2ec4745b6d5d125d5a64af51b8486716510981205ac6a030c685ca571b64ab8a
-updated: 2018-01-25T17:45:21.943677+08:00
+hash: 84a18068a37a918480f1903a674ce121397a7072f1332ced4b804e522a8c0afd
+updated: 2018-01-28T14:22:20.761503185+08:00
 imports:
 - name: github.com/beorn7/perks
   version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
   subpackages:
   - quantile
 - name: github.com/golang/protobuf
-  version: 5a0f697c9ed9d68fef0116532c6e05cfeae00e55
+  version: 925541529c1fa6821df4e44ce2723319eb2be768
   subpackages:
   - proto
 - name: github.com/inconshreveable/mousetrap
@@ -31,30 +31,32 @@ imports:
   - internal/bitbucket.org/ww/goautoneg
   - model
 - name: github.com/prometheus/procfs
-  version: 85fadb6e89903ef7cca6f6a804474cd5ea85b6e1
+  version: cb4147076ac75738c9a7d279075a253c0cc5acbd
   subpackages:
   - internal/util
-  - nfsd
+  - nfs
   - xfs
+- name: github.com/rifflock/lfshook
+  version: 1fdc019a35147ddbb3d25aedf713ad6d1430c144
 - name: github.com/sirupsen/logrus
   version: d682213848ed68c0a260ca37d6dd5ace8423f5ba
 - name: github.com/spf13/cobra
   version: 7b2c5ac9fc04fc5efafb60700713d4fa609b777b
 - name: github.com/spf13/pflag
-  version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
+  version: 4c012f6dcd9546820e378d0bdda4d8fc772cdfea
 - name: golang.org/x/crypto
-  version: 2509b142fb2b797aa7587dad548f113b2c0f20ce
+  version: 1875d0a70c90e57f11972aefd42276df65e895b9
   subpackages:
   - ssh/terminal
 - name: golang.org/x/net
-  version: 44b7c21cbf19450f38b337eb6b6fe4f6496fb5b3
+  version: 0ed95abb35c445290478a5348a7b38bb154135fd
   subpackages:
   - publicsuffix
 - name: golang.org/x/sys
-  version: d8f5ea21b9295e315e612b4bcf4bedea93454d4d
+  version: ff2a66f350cefa5c93a634eadb5d25bb60c85a9c
   subpackages:
   - unix
   - windows
 - name: gopkg.in/resty.v0
-  version: 9ac9c42358f7c3c69ac9f8610e8790d7c338e85d
+  version: b61f45364a2f729165059cd3b411fd9dfeb0b969
 testImports: []

@@ -11,3 +11,5 @@ import:
   version: ^0.0.1
 - package: gopkg.in/resty.v0
   version: ^1.0.0
+- package: github.com/rifflock/lfshook
+  version: ^2.2.0

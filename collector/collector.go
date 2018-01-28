@@ -1,13 +1,14 @@
 package collector
 
 import (
+	"fmt"
 	"encoding/json"
 	"sync"
 	"time"
 
 	"github.com/FX-HAO/crypto-market-overwatch/coin"
+	"github.com/FX-HAO/crypto-market-overwatch/log"
 	"github.com/prometheus/client_golang/prometheus"
-	log "github.com/sirupsen/logrus"
 
 	resty "gopkg.in/resty.v0"
 )
@@ -151,11 +152,10 @@ func (c *Collector) Start() {
 func (c *Collector) fetch() (coin.Coins, error) {
 	resp, err := resty.R().Get("https://api.coinmarketcap.com/v1/ticker/?convert=CNY")
 	if err != nil {
-		log.Error(err)
 		return nil, err
 	}
 	if resp.StatusCode() != 200 {
-		log.Error("Cannot access routes api")
+		return nil, fmt.Errorf("Cannot access api, status code: %d", resp.StatusCode())
 	}
 	coins := []*coin.Coin{}
 	if err := json.Unmarshal(resp.Body(), &coins); err != nil {
@@ -176,6 +176,8 @@ func (c *Collector) collect() {
 				log.Error(err)
 				continue
 			}
+			log.Infof("fetch %d coins", len(coins))
+
 			for _, coin := range coins {
 				(&gaugeCoin{priceUSD}).setCoin(coin, coin.PriceUSD)
 				(&gaugeCoin{priceBTC}).setCoin(coin, coin.PriceBTC)
