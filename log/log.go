@@ -3,29 +3,29 @@ package log
 import (
 	"os"
 
-	"github.com/sirupsen/logrus"
 	"github.com/rifflock/lfshook"
+	"github.com/sirupsen/logrus"
 )
 
 var (
 	logger = logrus.New()
 
-	// DEBUG ...
+	// Debug logs a message using DEBUG as log level.
 	Debug  = logger.Debug
 	Debugf = logger.Debugf
-	// INFO ...
+	// Info logs a message using INFO as log level.
 	Info  = logger.Info
 	Infof = logger.Infof
-	// WARNING ...
+	// Warn logs a message using WARN as log level.
 	Warn  = logger.Warn
 	Warnf = logger.Warnf
-	// ERROR ...
+	// Error logs a message using ERROR as log level.
 	Error  = logger.Error
 	Errorf = logger.Errorf
-	// FATAL ...
+	// Fatal logs a message using FATAL as log level and followed by a call to os.Exit(1).
 	Fatal  = logger.Fatal
 	Fatalf = logger.Fatalf
-	// Panic ...
+	// Panic logs a message using ERROR as log level and followed by a call to panic().
 	Panic  = logger.Panic
 	Panicf = logger.Panicf
 )
@@ -50,16 +50,21 @@ func init() {
 	}, formatter))
 }
 
+// Fields type, used to pass to `WithFields`.
 type Fields logrus.Fields
 
+// WithFields adds a struct of fields to the log entry. All it does is call `WithField` for
+// each `Field`.
 func WithFields(fields Fields) *logrus.Entry {
 	return logger.WithFields(logrus.Fields(fields))
 }
 
+// New creates a new logger.
 func New() *logrus.Logger {
 	return logrus.New()
 }
 
+// GetLogger returns a global instance
 func GetLogger() *logrus.Logger {
 	return logger
 }

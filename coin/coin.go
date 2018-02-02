@@ -26,7 +26,7 @@ type Coin struct {
 	MarketCapCNY               float64 `json:"market_cap_cny,string"`
 }
 
-func (coin *Coin) Metrics() map[string]float64 {
+func (coin *Coin) metrics() map[string]float64 {
 	metrics := make(map[string]float64)
 	metrics[coin.concatenateMetricName("price_usd")] = coin.PriceUSD
 	metrics[coin.concatenateMetricName("price_btc")] = coin.PriceBTC
@@ -45,4 +45,5 @@ func (coin *Coin) concatenateMetricName(attr string) string {
 	return strings.Join([]string{strings.Replace(strings.ToLower(coin.ID), "-", "_", -1), attr}, "_")
 }
 
+// Coins represents an array of coins
 type Coins []*Coin
