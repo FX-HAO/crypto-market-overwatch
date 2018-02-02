@@ -1,8 +1,8 @@
 package collector
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"sync"
 	"time"
 
@@ -125,6 +125,7 @@ func init() {
 	prometheus.MustRegister(marketCapCNY)
 }
 
+// Collector represents a collector that collects data from the server
 type Collector struct {
 	mu sync.RWMutex
 
@@ -137,6 +138,7 @@ type Collector struct {
 	closed int32
 }
 
+// NewCollector creates a new Collector and returns it.
 func NewCollector(interval int) *Collector {
 	collector := &Collector{
 		coins:    make(map[string]*coin.Coin),
