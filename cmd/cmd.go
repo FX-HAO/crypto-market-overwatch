@@ -15,13 +15,11 @@ package cmd
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/FX-HAO/crypto-market-overwatch/collector"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -38,8 +36,6 @@ var RootCmd = &cobra.Command{
 	Short: "Tracking crypto market cap",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		http.Handle("/metrics", promhttp.Handler())
-		collector.NewCollector(Interval).Start()
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 		go func() {
@@ -60,7 +56,7 @@ var RootCmd = &cobra.Command{
 			}
 		}()
 
-		log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", Host, Port), nil))
+		collector.ListenAndServe(Host, Port, Interval)
 	},
 }
 

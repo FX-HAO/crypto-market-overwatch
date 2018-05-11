@@ -29,6 +29,13 @@ docker run -it -d -p 80:80 --name crypto-market-overwatch fuxin/crypto-market-ov
 
 Then start your prometheus and configure the target to the server, see [prometheus.yml](https://github.com/FX-HAO/crypto-market-overwatch/blob/master/prometheus/prometheus.yml).
 
+## APIs
+
+```
+/api/coins       // return all coins information
+/api/coin/{coin} // return specific coin information
+```
+
 ## Options
 
 You can set up a Grafana dashboard for Prometheus. More info: [Grafana supports querying Prometheus](https://prometheus.io/docs/visualization/grafana/)

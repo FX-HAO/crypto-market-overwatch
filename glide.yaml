@@ -13,3 +13,5 @@ import:
   version: ^1.0.0
 - package: github.com/rifflock/lfshook
   version: ^2.2.0
+- package: github.com/gorilla/mux
+  version: ^1.6.1

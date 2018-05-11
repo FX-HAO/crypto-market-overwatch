@@ -1,14 +1,16 @@
-hash: 84a18068a37a918480f1903a674ce121397a7072f1332ced4b804e522a8c0afd
-updated: 2018-01-28T14:22:20.761503185+08:00
+hash: d97f516de318f091f63c8a60cb888276df281e96c9a6e5917e3530f6be15d4d6
+updated: 2018-05-11T17:43:23.333935+08:00
 imports:
 - name: github.com/beorn7/perks
-  version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
+  version: 3a771d992973f24aa725d07868b467d1ddfceafb
   subpackages:
   - quantile
 - name: github.com/golang/protobuf
-  version: 925541529c1fa6821df4e44ce2723319eb2be768
+  version: 5a0f697c9ed9d68fef0116532c6e05cfeae00e55
   subpackages:
   - proto
+- name: github.com/gorilla/mux
+  version: 53c1911da2b537f792e7cafcb446b05ffe33b996
 - name: github.com/inconshreveable/mousetrap
   version: 76626ae9c91c4f2a10f34cad8ce83ea42c93bb75
 - name: github.com/matttproud/golang_protobuf_extensions
@@ -25,38 +27,38 @@ imports:
   subpackages:
   - go
 - name: github.com/prometheus/common
-  version: 89604d197083d4781071d3c65855d24ecfb0a563
+  version: d811d2e9bf898806ecfb6ef6296774b13ffc314c
   subpackages:
   - expfmt
   - internal/bitbucket.org/ww/goautoneg
   - model
 - name: github.com/prometheus/procfs
-  version: cb4147076ac75738c9a7d279075a253c0cc5acbd
+  version: 8b1c2da0d56deffdbb9e48d4414b4e674bd8083e
   subpackages:
   - internal/util
   - nfs
   - xfs
 - name: github.com/rifflock/lfshook
-  version: 1fdc019a35147ddbb3d25aedf713ad6d1430c144
+  version: bf539943797a1f34c1f502d07de419b5238ae6c6
 - name: github.com/sirupsen/logrus
-  version: d682213848ed68c0a260ca37d6dd5ace8423f5ba
+  version: c155da19408a8799da419ed3eeb0cb5db0ad5dbc
 - name: github.com/spf13/cobra
-  version: 7b2c5ac9fc04fc5efafb60700713d4fa609b777b
+  version: a1f051bc3eba734da4772d60e2d677f47cf93ef4
 - name: github.com/spf13/pflag
-  version: 4c012f6dcd9546820e378d0bdda4d8fc772cdfea
+  version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
 - name: golang.org/x/crypto
-  version: 1875d0a70c90e57f11972aefd42276df65e895b9
+  version: 2509b142fb2b797aa7587dad548f113b2c0f20ce
   subpackages:
   - ssh/terminal
 - name: golang.org/x/net
-  version: 0ed95abb35c445290478a5348a7b38bb154135fd
+  version: 44b7c21cbf19450f38b337eb6b6fe4f6496fb5b3
   subpackages:
   - publicsuffix
 - name: golang.org/x/sys
-  version: ff2a66f350cefa5c93a634eadb5d25bb60c85a9c
+  version: d8f5ea21b9295e315e612b4bcf4bedea93454d4d
   subpackages:
   - unix
   - windows
 - name: gopkg.in/resty.v0
-  version: b61f45364a2f729165059cd3b411fd9dfeb0b969
+  version: 65798e030a35b911602b4d1d743d6f50ac93b665
 testImports: []

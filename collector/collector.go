@@ -3,12 +3,15 @@ package collector
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"sync"
 	"time"
 
 	"github.com/FX-HAO/crypto-market-overwatch/coin"
 	"github.com/FX-HAO/crypto-market-overwatch/log"
+	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	resty "gopkg.in/resty.v0"
 )
@@ -139,13 +142,28 @@ type Collector struct {
 }
 
 // NewCollector creates a new Collector and returns it.
-func NewCollector(interval int) *Collector {
+func newCollector(interval int) *Collector {
 	collector := &Collector{
 		coins:    make(map[string]*coin.Coin),
 		gauges:   make(map[string]prometheus.Gauge),
 		interval: interval,
 	}
 	return collector
+}
+
+func ListenAndServe(host string, port, interval int) {
+	c := newCollector(interval)
+	c.Start()
+
+	router := mux.NewRouter()
+	router.Handle("/metrics", promhttp.Handler()).Methods("GET")
+	router.HandleFunc("/api/coins", c.coinsHandler).Methods("GET")
+	router.HandleFunc("/api/coins/{coin}", c.coinHandler).Methods("GET")
+
+	router.Use(restfulMiddleware)
+
+	http.Handle("/", router)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf("%s:%d", host, port), nil))
 }
 
 // Start does some initial preparation and starts to work
