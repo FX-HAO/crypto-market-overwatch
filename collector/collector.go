@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"sync"
 	"time"
 
@@ -219,7 +220,7 @@ func (c *Collector) collect() {
 				(&gaugeCoin{pastDayVolumeCNY}).setCoin(coin, coin.PastDayVolumeCNY)
 				(&gaugeCoin{marketCapCNY}).setCoin(coin, coin.MarketCapCNY)
 
-				c.coins[string(coin.ID)] = coin
+				c.coins[strconv.FormatInt(coin.ID, 10)] = coin
 			}
 			c.lastUpdated = time.Now().Unix()
 			c.mu.Unlock()
@@ -232,5 +233,5 @@ type gaugeCoin struct {
 }
 
 func (gauge *gaugeCoin) setCoin(coin *coin.Coin, v float64) {
-	gauge.WithLabelValues(string(coin.ID)).Set(v)
+	gauge.WithLabelValues(strconv.FormatInt(coin.ID, 10)).Set(v)
 }

@@ -1,6 +1,7 @@
 package coin
 
 import (
+	"strconv"
 	"strings"
 )
 
@@ -57,7 +58,7 @@ func (coin *Coin) metrics() map[string]float64 {
 }
 
 func (coin *Coin) concatenateMetricName(attr string) string {
-	return strings.Join([]string{strings.Replace(strings.ToLower(string(coin.ID)), "-", "_", -1), attr}, "_")
+	return strings.Join([]string{strings.Replace(strings.ToLower(strconv.FormatInt(coin.ID, 10)), "-", "_", -1), attr}, "_")
 }
 
 // Coins represents an array of coins
