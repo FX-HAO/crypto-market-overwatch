@@ -4,9 +4,23 @@ import (
 	"strings"
 )
 
+type Currency struct {
+	Price                      float64 `json:"price"`
+	PastDayVolume              float64 `json:"volume_24h"`
+	PercentChangeOneHour       float64 `json:"percent_change_1h"`
+	PercentChangePastDay       float64 `json:"percent_change_24h"`
+	PercentChangePastSevenDays float64 `json:"percent_change_7d"`
+	MarketCap                  float64 `json:"market_cap"`
+}
+
+type Quote struct {
+	CNY *Currency `json:"CNY"`
+	USD *Currency `json:"USD"`
+}
+
 // Coin represents each crypto coins
 type Coin struct {
-	ID                         string  `json:"id"`
+	ID                         int64   `json:"id,int"`
 	Name                       string  `json:"name"`
 	Symbol                     string  `json:"symbol"`
 	Rank                       float64 `json:"rank,string"`
@@ -15,8 +29,8 @@ type Coin struct {
 	PastDayVolumeUSD           float64 `json:"24h_volume_usd,string"`
 	MarketCapUSD               float64 `json:"market_cap_usd,string"`
 	AvailableSupply            float64 `json:"available_supply,string"`
-	TotalSupply                float64 `json:"total_supply,string"`
-	MaxSupply                  float64 `json:"max_supply,string"`
+	TotalSupply                float64 `json:"total_supply"`
+	MaxSupply                  float64 `json:"max_supply"`
 	PercentChangeOneHour       float64 `json:"percent_change_1h,string"`
 	PercentChangePastDay       float64 `json:"percent_change_24h,string"`
 	PercentChangePastSevenDays float64 `json:"percent_change_7d,string"`
@@ -24,6 +38,7 @@ type Coin struct {
 	PriceCNY                   float64 `json:"price_cny,string"`
 	PastDayVolumeCNY           float64 `json:"24h_volume_cny,string"`
 	MarketCapCNY               float64 `json:"market_cap_cny,string"`
+	Quote                      *Quote  `json:"quote"`
 }
 
 func (coin *Coin) metrics() map[string]float64 {
@@ -42,8 +57,19 @@ func (coin *Coin) metrics() map[string]float64 {
 }
 
 func (coin *Coin) concatenateMetricName(attr string) string {
-	return strings.Join([]string{strings.Replace(strings.ToLower(coin.ID), "-", "_", -1), attr}, "_")
+	return strings.Join([]string{strings.Replace(strings.ToLower(string(coin.ID)), "-", "_", -1), attr}, "_")
 }
 
 // Coins represents an array of coins
 type Coins []*Coin
+
+func (coins Coins) Init() {
+	for _, coin := range coins {
+		coin.PriceUSD = coin.Quote.USD.Price
+		coin.PastDayVolumeUSD = coin.Quote.USD.PastDayVolume
+		coin.MarketCapUSD = coin.Quote.USD.MarketCap
+		coin.PriceCNY = coin.Quote.CNY.Price
+		coin.PastDayVolumeCNY = coin.Quote.CNY.PastDayVolume
+		coin.MarketCapCNY = coin.Quote.CNY.MarketCap
+	}
+}

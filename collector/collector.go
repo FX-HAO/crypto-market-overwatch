@@ -172,17 +172,21 @@ func (c *Collector) Start() {
 }
 
 func (c *Collector) fetch() (coin.Coins, error) {
-	resp, err := resty.R().Get("https://api.coinmarketcap.com/v1/ticker/?convert=CNY")
+	resp, err := resty.R().Get("https://web-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?convert=USD,CNY")
 	if err != nil {
 		return nil, err
 	}
 	if resp.StatusCode() != 200 {
 		return nil, fmt.Errorf("Cannot access api, status code: %d", resp.StatusCode())
 	}
-	coins := []*coin.Coin{}
-	if err := json.Unmarshal(resp.Body(), &coins); err != nil {
+	var data struct {
+		Data coin.Coins `json:"data"`
+	}
+	if err := json.Unmarshal(resp.Body(), &data); err != nil {
 		return nil, err
 	}
+	coins := data.Data
+	coins.Init()
 	return coins, nil
 }
 
@@ -215,7 +219,7 @@ func (c *Collector) collect() {
 				(&gaugeCoin{pastDayVolumeCNY}).setCoin(coin, coin.PastDayVolumeCNY)
 				(&gaugeCoin{marketCapCNY}).setCoin(coin, coin.MarketCapCNY)
 
-				c.coins[coin.ID] = coin
+				c.coins[string(coin.ID)] = coin
 			}
 			c.lastUpdated = time.Now().Unix()
 			c.mu.Unlock()
@@ -228,5 +232,5 @@ type gaugeCoin struct {
 }
 
 func (gauge *gaugeCoin) setCoin(coin *coin.Coin, v float64) {
-	gauge.WithLabelValues(coin.ID).Set(v)
+	gauge.WithLabelValues(string(coin.ID)).Set(v)
 }

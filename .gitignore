@@ -22,3 +22,5 @@ pids/*
 crypto-market-overwatch
 
 debug
+
+.vscode
