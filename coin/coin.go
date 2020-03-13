@@ -66,7 +66,7 @@ type Coins []*Coin
 
 func (coins Coins) Init() {
 	for _, coin := range coins {
-		coin.ID = strings.ToLower(coin.Name)
+		coin.ID = strings.Replace(strings.ToLower(coin.Name), " ", "-", -1)
 
 		coin.PriceUSD = coin.Quote.USD.Price
 		coin.PastDayVolumeUSD = coin.Quote.USD.PastDayVolume
