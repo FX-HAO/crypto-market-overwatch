@@ -1,7 +1,6 @@
 package coin
 
 import (
-	"strconv"
 	"strings"
 )
 
@@ -21,7 +20,8 @@ type Quote struct {
 
 // Coin represents each crypto coins
 type Coin struct {
-	ID                         int64   `json:"id,int"`
+	// ID                         int64   `json:"id,int"`
+	ID                         string  `json:"-"`
 	Name                       string  `json:"name"`
 	Symbol                     string  `json:"symbol"`
 	Rank                       float64 `json:"rank,string"`
@@ -58,7 +58,7 @@ func (coin *Coin) metrics() map[string]float64 {
 }
 
 func (coin *Coin) concatenateMetricName(attr string) string {
-	return strings.Join([]string{strings.Replace(strings.ToLower(strconv.FormatInt(coin.ID, 10)), "-", "_", -1), attr}, "_")
+	return strings.Join([]string{strings.Replace(strings.ToLower(coin.ID), "-", "_", -1), attr}, "_")
 }
 
 // Coins represents an array of coins
@@ -66,6 +66,8 @@ type Coins []*Coin
 
 func (coins Coins) Init() {
 	for _, coin := range coins {
+		coin.ID = strings.ToLower(coin.Name)
+
 		coin.PriceUSD = coin.Quote.USD.Price
 		coin.PastDayVolumeUSD = coin.Quote.USD.PastDayVolume
 		coin.MarketCapUSD = coin.Quote.USD.MarketCap
