@@ -1,6 +1,7 @@
 package coin
 
 import (
+	"encoding/json"
 	"strings"
 )
 
@@ -40,6 +41,37 @@ type Coin struct {
 	PastDayVolumeCNY           float64 `json:"24h_volume_cny,string"`
 	MarketCapCNY               float64 `json:"market_cap_cny,string"`
 	Quote                      *Quote  `json:"quote"`
+}
+
+type coinEncodedWithID struct {
+	// ID                         int64   `json:"id,int"`
+	ID                         string  `json:"id"`
+	Name                       string  `json:"name"`
+	Symbol                     string  `json:"symbol"`
+	Rank                       float64 `json:"rank,string"`
+	PriceUSD                   float64 `json:"price_usd,string"`
+	PriceBTC                   float64 `json:"price_btc,string"`
+	PastDayVolumeUSD           float64 `json:"24h_volume_usd,string"`
+	MarketCapUSD               float64 `json:"market_cap_usd,string"`
+	AvailableSupply            float64 `json:"available_supply,string"`
+	TotalSupply                float64 `json:"total_supply"`
+	MaxSupply                  float64 `json:"max_supply"`
+	PercentChangeOneHour       float64 `json:"percent_change_1h,string"`
+	PercentChangePastDay       float64 `json:"percent_change_24h,string"`
+	PercentChangePastSevenDays float64 `json:"percent_change_7d,string"`
+	LastUpdated                int64   `json:"-"`
+	PriceCNY                   float64 `json:"price_cny,string"`
+	PastDayVolumeCNY           float64 `json:"24h_volume_cny,string"`
+	MarketCapCNY               float64 `json:"market_cap_cny,string"`
+	Quote                      *Quote  `json:"quote"`
+}
+
+func (coin *Coin) MarshalJSON() ([]byte, error) {
+	if bytes, err := json.Marshal(coinEncodedWithID(*coin)); err != nil {
+		return nil, err
+	} else {
+		return bytes, nil
+	}
 }
 
 func (coin *Coin) metrics() map[string]float64 {
