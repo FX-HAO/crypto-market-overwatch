@@ -33,7 +33,7 @@ Then start your prometheus and configure the target to the server, see [promethe
 
 ```
 /api/coins       // return all coins information
-/api/coin/{coin} // return specific coin information
+/api/coins/{coin} // return specific coin information
 ```
 
 ## Options
