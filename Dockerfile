@@ -1,4 +1,4 @@
-FROM golang:1.9 AS build
+FROM golang:1.22 AS build
 WORKDIR /go/src/github.com/FX-HAO/crypto-market-overwatch
 ADD . /go/src/github.com/FX-HAO/crypto-market-overwatch
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o crypto-market-overwatch .

@@ -24,7 +24,7 @@ See detail:
 It's recommended to use docker to keep your environment clean and much easier to use.
 
 ```
-docker run -it -d -p 80:80 --name crypto-market-overwatch fuxin/crypto-market-overwatch
+docker run -it -d -p 80:80 -e X_CMC_PRO_API_KEY=$X_CMC_PRO_API_KEY --name crypto-market-overwatch fuxin/crypto-market-overwatch
 ```
 
 Then start your prometheus and configure the target to the server, see [prometheus.yml](https://github.com/FX-HAO/crypto-market-overwatch/blob/master/prometheus/prometheus.yml).
