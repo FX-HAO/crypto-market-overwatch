@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"sync"
 	"time"
 
@@ -13,7 +14,11 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	resty "gopkg.in/resty.v0"
+	resty "github.com/go-resty/resty/v2"
+)
+
+var (
+	X_CMC_PRO_API_KEY = os.Getenv("X_CMC_PRO_API_KEY")
 )
 
 var (
@@ -111,8 +116,6 @@ var (
 )
 
 func init() {
-	resty.SetHTTPMode()
-
 	prometheus.MustRegister(priceUSD)
 	prometheus.MustRegister(priceBTC)
 	prometheus.MustRegister(pastDayVolumeUSD)
@@ -171,8 +174,13 @@ func (c *Collector) Start() {
 	c.collect()
 }
 
+var client = resty.New()
+var enableCNY = true
+
 func (c *Collector) fetch() (coin.Coins, error) {
-	resp, err := resty.R().Get("https://web-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?convert=USD,CNY")
+	resp, err := client.R().
+		SetHeader("X-CMC_PRO_API_KEY", X_CMC_PRO_API_KEY).
+		Get("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?convert=USD")
 	if err != nil {
 		return nil, err
 	}
@@ -187,6 +195,26 @@ func (c *Collector) fetch() (coin.Coins, error) {
 	}
 	coins := data.Data
 	coins.Init()
+
+	if enableCNY {
+		resp, err = client.R().
+			SetHeader("X-CMC_PRO_API_KEY", X_CMC_PRO_API_KEY).
+			Get("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?convert=CNY")
+		if err != nil {
+			return nil, err
+		}
+		if resp.StatusCode() != 200 {
+			return nil, fmt.Errorf("Cannot access api, status code: %d", resp.StatusCode())
+		}
+		var cnyData struct {
+			Data coin.Coins `json:"data"`
+		}
+		if err := json.Unmarshal(resp.Body(), &cnyData); err != nil {
+			return nil, err
+		}
+		cnyCoins := cnyData.Data
+		coins.SetCNY(cnyCoins)
+	}
 	return coins, nil
 }
 
@@ -194,7 +222,6 @@ func (c *Collector) fetch() (coin.Coins, error) {
 func (c *Collector) collect() {
 	go func() {
 		for {
-			time.Sleep(time.Second * time.Duration(c.interval))
 			c.mu.Lock()
 			coins, err := c.fetch()
 			if err != nil {
@@ -206,7 +233,7 @@ func (c *Collector) collect() {
 
 			for _, coin := range coins {
 				(&gaugeCoin{priceUSD}).setCoin(coin, coin.PriceUSD)
-				(&gaugeCoin{priceBTC}).setCoin(coin, coin.PriceBTC)
+				// (&gaugeCoin{priceBTC}).setCoin(coin, coin.PriceBTC)
 				(&gaugeCoin{pastDayVolumeUSD}).setCoin(coin, coin.PastDayVolumeUSD)
 				(&gaugeCoin{marketCapUSD}).setCoin(coin, coin.MarketCapUSD)
 				(&gaugeCoin{availableSupply}).setCoin(coin, coin.AvailableSupply)
@@ -223,6 +250,8 @@ func (c *Collector) collect() {
 			}
 			c.lastUpdated = time.Now().Unix()
 			c.mu.Unlock()
+
+			time.Sleep(time.Second * time.Duration(c.interval))
 		}
 	}()
 }
